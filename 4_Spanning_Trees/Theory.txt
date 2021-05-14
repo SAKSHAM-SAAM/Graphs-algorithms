@@ -1,0 +1,9 @@
+Spanning Trees ->
+There are two most famous algorithms associated with MST. Kruskal's Algo and Prim's Algo.
+Both are Greedy based algorithms.
+
+> Classical Algorithms :
+    1.Boruvka algorithm
+    2.Prim's algorithm
+    3.Kruskal's algorithms
+    4.reverse-delete algorithm
