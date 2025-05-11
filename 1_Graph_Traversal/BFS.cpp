@@ -2,53 +2,49 @@
 using namespace std;
 #define IOS ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 #define pb push_back
-void _Util(bool visited[],vector<int> edges[],int str)
+void BFS(vector<vector<int>> adj)
 {
+    int V = adj.size();
+    // Main BFS logic
     queue<int> q;
-    q.push(str);
-    visited[str]=true;
-    while(!q.empty())
-    {
-        int x=q.front();
+    q.push(0);
+    vector<bool> vis(V, false);
+    vis[0] = true;
+    int qs = q.size();
+    while(!q.empty()){
+        int vert = q.front();
         q.pop();
-        cout<<x<<" ";
-        for(int k=0;k<edges[x].size();k++)
-        {
-            if(visited[edges[x][k]]==false){
-                visited[edges[x][k]]=true;
-                q.push(edges[x][k]);
+        for(int v=0; v < adj[vert].size() ; v++){
+            int newVert = adj[vert][v];
+            if(!vis[newVert]){
+                q.push(newVert);
+                vis[newVert] = true;
             }
         }
+
+        cout<<vert;
+        (q.empty())?(cout<<" : "):(cout<<" - ");
     }
 }
-void BFS(vector<int> edges[],int V)
-{
-    bool visited[V]={false};
-    int count=0;
-    for(int i=0;i<V;i++)
-    {
-        if(visited[i]==false)
-        {
-            _Util(visited,edges,i);
-            count++;
-        }
+void solve(){
+    // input the graph
+    int V,E;
+    cin>>V>>E;
+    vector<vector<int>> adj(V, vector<int>());
+    for(int i=0;i<E;i++){
+        int a,b; cin>>a>>b;
+        adj[a].pb(b);
+        adj[b].pb(a);
     }
-    cout<<endl;
-    cout<<"count of islands: "<<count<<'\n';
+    // call BFS on graph
+    BFS(adj);
 }
 int main()
 {
     IOS;
-    int V,E;
-    cin>>V>>E;
-    vector<int> edges[V];
-    while(E--)
-    {
-        int a,b;
-        cin>>a>>b;
-        edges[a].pb(b);
-        edges[b].pb(a);
+    int tc; cin>>tc;
+    while(tc--){
+        solve();
     }
-    BFS(edges,V);
     return 0;
 }
