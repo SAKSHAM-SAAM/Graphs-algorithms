@@ -10,20 +10,31 @@ void BFS(vector<vector<int>> adj)
     q.push(0);
     vector<bool> vis(V, false);
     vis[0] = true;
-    int qs = q.size();
-    while(!q.empty()){
-        int vert = q.front();
-        q.pop();
-        for(int v=0; v < adj[vert].size() ; v++){
-            int newVert = adj[vert][v];
-            if(!vis[newVert]){
-                q.push(newVert);
-                vis[newVert] = true;
+    int qs = q.size(); int cnt = 0;
+    while (!q.empty())
+    {
+        if (qs >= cnt)
+        {
+            int vert = q.front();
+            q.pop();
+            for (int v = 0; v < adj[vert].size(); v++)
+            {
+                int newVert = adj[vert][v];
+                if (!vis[newVert])
+                {
+                    q.push(newVert);
+                    vis[newVert] = true;
+                }
             }
+            cnt++;
+            cout << vert;
+            (qs == cnt) ? (cout << " : ") : (cout << " - ");
         }
-
-        cout<<vert;
-        (q.empty())?(cout<<" : "):(cout<<" - ");
+        if(qs == cnt){
+            cnt = 0;
+            qs = q.size();
+            cout<<endl;
+        }
     }
 }
 void solve(){

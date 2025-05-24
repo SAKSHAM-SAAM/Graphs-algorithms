@@ -1,48 +1,58 @@
 #include<bits/stdc++.h>
 using namespace std; 
-vector<int> dijkstra(vector<pair<int,int>> adj[],int V,int src)
+#define IOS ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+#define pb push_back
+/*
+ DJIKSTRA ALGORITHM FOR SHORTEST DISTANCE
+ * Undirected
+ * Weighted
+*/
+ vector<int> dijkstra(vector<vector<vector<int>>> &adj,int V,int src)
 {
-    vector<int> dist(V,INT32_MAX);
-    priority_queue<pair<int,int>> q;
-    vector<bool> visited(V,false);
-    dist[src]=0;
-    q.push({0,src});
-    while(!q.empty())
-    {
-        int cur=q.top().second;
-        q.pop();
-        if(visited[cur]) continue;
-        visited[cur]=true;
-        for(auto x:adj[cur])
-        {
-            int to=x.second;
-            int wt=(x.first);
-            if(dist[to] > wt+dist[cur])
-            {
-                dist[to] = wt+dist[cur];
-                q.push({-dist[to],to});
+    vector<int> dist(V, INT_MAX);
+    vector<bool> vis(V, false);
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>> > pq;
+    dist[src] = 0;
+    pq.push({0,src});
+    while(!pq.empty()){
+        int from = pq.top()[1];
+        pq.pop();
+        if(vis[from]) continue;
+        vis[from] = true;
+        for(int i=0 ; i<adj[from].size() ; i++){
+            vector<int> nextVec = adj[from][i];
+            int to = nextVec[0];
+            int wt = nextVec[1];
+            if( dist[to] >  wt + dist[from]){
+                dist[to] = wt + dist[from];
+                pq.push({wt, to});
             }
         }
     }
     return dist;
 }
+void solve()
+{
+    int V,E; cin>>V>>E;
+    vector<vector<vector<int>>> adj(V, vector<vector<int>> ());
+    for(int i=0;i<E;i++){
+        int a,b,w;
+        cin>>a>>b>>w;
+        adj[a].pb({b, w});
+        adj[b].pb({a, w});
+    }
+    vector<int> minDist = dijkstra(adj, V, 0);
+    cout<<"From source 0 , distance to all vertices is : "<<endl;
+    for(int i=0; i<V; i++){
+        cout<<i<<" = "<<minDist[i]<<"\n";
+    }
+}
 int main()
 {
-    int V,E;
-    cin>>V>>E;
-    vector<pair<int,int>> adj[V];
-    while(E--)
-    {
-        int s,e,w;
-        cin>>s>>e>>w;
-        adj[s].push_back({w,e});
-    }
-    int src;cin>>src;
-    vector<int> dist=dijkstra(adj,V,src);
-    cout<<"source -> "<<src<<"\n";
-    for(int i=0;i<V;i++)
-    {
-        cout<<i<<" "<<dist[i]<<'\n';
+    IOS;
+    int tc; cin>>tc;
+    while(tc--){
+        solve();
     }
     return 0;
 }

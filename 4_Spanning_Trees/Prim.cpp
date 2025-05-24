@@ -1,88 +1,76 @@
 #include<bits/stdc++.h>
 using namespace std;
-// -----
-struct edge{
-    int w=INT_MAX, to=-1;
-    bool operator<(edge const &other) const
-    {
-        return make_pair(w, to) < make_pair(other.w, other.to);
-    }
+#define pb push_back
+class Edge{
+    public:
+        int to;
+        int weight;
+        Edge(int to, int wt){
+            this->to        = to;
+            this->weight    = wt;
+        }
 };
-int Prim(vector<edge> edges[],int V)
-{
-    // final answer
-    int minSpan=0;
-    // declaration of library data structures
-    vector<bool> visited(V,false);
-    set<edge> hset;
-    vector<edge> min_edge(V);
-    // modifing data
-    min_edge[0].w=0;
-    hset.insert({0,0});
-    for(int i=0;i<V;i++)
-    {
-        if(hset.empty())
-        {
-            cout<<"No MST possible\n";
-            exit(0);
-        }
-        int v=hset.begin()->to;
-        visited[v] = true;
-        minSpan=minSpan+hset.begin()->w;
-        hset.erase(hset.begin());
 
-        if(min_edge[i].to != -1)
-        {
-            cout<<i<<" "<<min_edge[i].to<<" "<<min_edge[i].w<<'\n';
+class Compare{
+    public: 
+        bool operator()(Edge a, Edge b){
+            return a.weight > b.weight;
         }
+};
 
-        for(edge e:edges[v])
-        {
-            if (!visited[e.to] && e.w < min_edge[e.to].w) {
-                hset.erase({min_edge[e.to].w, e.to});
-                min_edge[e.to] = {e.w, v};
-                hset.insert({e.w, e.to});
+int Prim(vector<Edge> adj[], int verts){
+    vector<bool> visited(verts, false);
+    vector<int> minDist(verts, INT16_MAX);
+    int mst = 0;
+    priority_queue<Edge, vector<Edge> , Compare > pq;
+    pq.push(Edge(0,0));
+    cout<<"line 27 : code to enter loop"<<endl;
+    while(!pq.empty()){
+        Edge curr  = pq.top(); pq.pop();
+        int to      = curr.to;
+        int weight  = curr.weight;  
+        cout<<"line 32 : values of to "<<to<<" and weight "<<weight<<endl;
+        if(visited[to]) continue;
+        visited[to] = true;
+        mst = mst + weight;
+        cout<<"MST value "<<mst<<endl;
+        cout<<"size of ADJ "<<adj[to].size()<<endl;
+        for(int i=0;i<adj[to].size();i++){
+            cout<<"visted Status of vert "<<adj[to][i].to<<" is "<<visited[adj[to][i].to];
+            if(!visited[adj[to][i].to]){
+                pq.push(adj[to][i]);
             }
-        }
+        }   
     }
-    return minSpan;
+    /*PRINT PQ DATA
+    for(auto x:adj){
+        pq.push(x);
+    }
+    while(!pq.empty()){
+        Edge tmp = pq.top(); pq.pop();
+        cout<<tmp.from<<" - "<<tmp.to<<" - "<<tmp.weight<<endl;
+    }*/
+    return mst;
 }
-/*
-    int spanningTree(int V, vector<vector<int>> adj[])
-    {
-        bool vis[V]={false};
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        pq.push({0, 0});
-        int sum=0;
-        while(!pq.empty())
-        {
-            pair<int, int> p=pq.top();
-            pq.pop();
-            int k=p.second;
-            if(vis[k]) continue;
-            vis[k]=true;
-            sum+=p.first;
-            for(int i=0; i<adj[k].size(); i++)
-            {
-                if(!vis[adj[k][i][0]]) pq.push({adj[k][i][1], adj[k][i][0]});
-            }
-        }
-        return sum;
+void solve(){
+    int verts, edges;
+    cin>>verts>>edges;
+    vector<Edge> adj[verts];
+    int from, to, wt;
+    for(int i=0; i<edges ; i++){
+        cin>>from>>to>>wt;
+
+        adj[from].pb(Edge(to, wt));
+        adj[to].pb(Edge(from, wt));
     }
-*/
-int main()
-{
-    int V,E;
-    cin>>V>>E;
-    vector<edge> edges[V];
-    while(E--)
-    {
-        int s,e,w;
-        cin>>s>>e>>w;
-        edge tmp; tmp.to=e; tmp.w=w;
-        edges[s].push_back(tmp);
+    int minDist = Prim(adj, verts);
+    cout<<"MIN DIST = "<<minDist<<endl;
+}
+int main(){
+    int test;
+    cin>>test;
+    while(test--){
+        solve();
     }
-    int dist = Prim(edges,V);
-    cout<<dist<<" ";
     return 0;
 }
